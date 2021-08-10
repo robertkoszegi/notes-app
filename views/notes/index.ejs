@@ -2,8 +2,47 @@
 
 <body>
     <h1>Notes page</h1>
-    <h1><%= user %></h1>
+    <button id="addNote">Add Note</button>
+    <!-- <div>
+        <a href="/notes/newList"><button>Add Checklist</button></a>
+    </div> -->
+    
+    <div>
+        <% if(notes.length){ %>
+            <ul>
+                <% notes.forEach(n =>  {%>
+                    <!-- this will be a button call modal with the content -->
+                    <li><%=n.title%></li><a href="note"></a>
+                <% })  %>       
+            </ul>
+        <% } else { %>
+            <div>No notes yet.</div>
+        <% } %>
+    </div>
+
+
+    <!-- MODAL INPUT -->
+    <div id="inputNote" class="modal">
+        <!-- Add Note button -->
+        <div class="modal-content">
+            <header class="modal-header">
+                <p>header</p>
+                <!-- close modal button -->
+                <span class="close">&times;</span>
+            </header>
+            <div class="modal-container">
+                <form id="noteFrm" action="/notes/newNote" method='post'>
+                    <input type="text" name="title"><br>
+                    <textarea name="textNote" id="textNote" cols="30" rows="10"></textarea><br>
+                    <button id="saveBtn" type='submit' >Save</button>
+                </form>
+            </div>
+            <footer class="modal-footer">
+                <p>footer</p>
+            </footer>
+        </div>
+    </div>
 
 </body>
-
+            
 <%- include('../partials/footer') %>

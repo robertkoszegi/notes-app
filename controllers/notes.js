@@ -1,31 +1,55 @@
 
 const User = require('../models/user');
+const Note = require('../models/note');
+
 
 function index(req, res, next) {
-    console.log(req.query)
-    // Make the query object to use with User.find based up
-    // the user has submitted the search form or now
-    let modelQuery = req.query.name ? {name: new RegExp(req.query.name, 'i')} : {};
-    // Default to sorting by name
-    let sortKey = req.query.sort || 'name';
-    User.find(modelQuery).sort(sortKey).exec(function(err, users) {
-        if (err) return next(err);
-        // Passing search values, name & sortKey, for use in the EJS
-        res.render('users/index', {
-            users,
-            user: req.user,
-            name: req.query.name, 
-            sortKey 
-        });
-    });
+    console.log(req.user.id)
+    
+    //after authentication...
+    // find the user in the database
+    // find user's notes
+    // render with results
+    Note.find({owner: req.user.id}).exec(function(err, notes) {
+        res.render('notes/index', {
+            title: "All notes",
+            notes,
+        }) 
+        
+    })
+
+}
+
+function show(req, res) {
+    Note.findById(req.params.id)
 }
 
 function addNote(req, res, next) {
-    // req.user.facts.push(req.body);
-    // req.user.save(function(err) {
-    //   res.redirect('/students');
-    // });
+    const note = new Note (req.body);
+    note.isChecklist = false;
+    note.owner = req.user.id;
+    note.guest = [];
+
+    note.save(function(err){
+        res.redirect('/notes/index')
+    })
 }
+// async function addNote(req, res, next) {
+//     const note = new Note (req.body);
+//     note.isChecklist = false;
+//     note.owner = req.user.id;
+//     note.guest = [];
+
+//     await note.save()
+//     res.redirect('/notes/index')
+// }
+
+// function addList(req, res, next) {
+//     // req.user.facts.push(req.body);
+//     // req.user.save(function(err) {
+//     //   res.redirect('/students');
+//     // });
+// }
   
 function delNote(req, res, next) {
     
@@ -33,4 +57,6 @@ function delNote(req, res, next) {
 
 module.exports = {
     index,
+    show,
+    addNote,
   };
