@@ -14,35 +14,71 @@ function index(req, res, next) {
         res.render('notes/index', {
             title: "All notes",
             notes,
+            modal: "none",
+            note:{},
         }) 
         
     })
 
 }
 
+// Show item
 function show(req, res) {
-    Note.findById(req.params.id)
+    Note.find({owner: req.user.id}).exec(function(err, notes) {
+        
+        Note.findById(req.params.id, function(err, note){
+            
+            res.render('notes/index', {
+                notes,
+                title: "All notes",
+                modal: "textNote",
+                note,
+                
+            })
+            
+        })
+    })
+
 }
 
-function addNote(req, res, next) {
+// Show empty module
+function startNote(req,res, next) {
+    Note.find({owner: req.user.id}).exec(function(err, notes ) {
+        
+        res.render('notes/index', {
+            title: "All notes",
+            notes,
+            modal: "textNote",
+            note:{},
+
+            
+        }) 
+        
+    })
+}
+
+
+// Create new record
+async function addNote(req, res, next) {
     const note = new Note (req.body);
     note.isChecklist = false;
     note.owner = req.user.id;
     note.guest = [];
 
-    note.save(function(err){
-        res.redirect('/notes/index')
+    await note.save()
+    Note.find({owner: req.user.id}).exec(function(err, notes) {
+        res.render('notes/index', {
+            title: "All notes",
+            notes,
+            modal: "none",
+            note:{},
+        }) 
+        
     })
 }
-// async function addNote(req, res, next) {
-//     const note = new Note (req.body);
-//     note.isChecklist = false;
-//     note.owner = req.user.id;
-//     note.guest = [];
 
-//     await note.save()
-//     res.redirect('/notes/index')
-// }
+
+
 
 // function addList(req, res, next) {
 //     // req.user.facts.push(req.body);
@@ -52,11 +88,24 @@ function addNote(req, res, next) {
 // }
   
 function delNote(req, res, next) {
-    
+    Note.deleteOne({_id:req.params.id}, function(err) {
+        if(err) {console.log(err)};
+        Note.find({owner: req.user.id}).exec(function(err, notes) {
+            res.render('notes/index', {
+                title: "All notes",
+                notes,
+                modal: "none",
+                note:{},
+            }) 
+            
+        })
+    } )
 }
 
 module.exports = {
     index,
     show,
     addNote,
+    startNote,
+    delNote,
   };

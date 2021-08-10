@@ -1,17 +1,17 @@
 body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-  background-color: #aaa;
+  background-color: rgb(209, 165, 108);
 }
 
 a {
-  color: #00B7FF;
+  color: #606466;
 }
 
 
 /* The Modal (background) */
 .modal {
-  display: none; /* Hidden by default */
+  /* display: none; Hidden by default */
   position: fixed; /* Stay in place */
   z-index: 1; /* Sit on top */
   left: 0;

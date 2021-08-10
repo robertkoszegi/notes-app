@@ -2,7 +2,7 @@
 
 <body>
     <h1>Notes page</h1>
-    <button id="addNote">Add Note</button>
+    <a href="/notes/newNote"><button id="addNote">Add Note</button></a>
     <!-- <div>
         <a href="/notes/newList"><button>Add Checklist</button></a>
     </div> -->
@@ -12,7 +12,7 @@
             <ul>
                 <% notes.forEach(n =>  {%>
                     <!-- this will be a button call modal with the content -->
-                    <li><%=n.title%></li><a href="note"></a>
+                    <a href="/notes/<%=n._id%>"><li><%=n.title%></li></a>
                 <% })  %>       
             </ul>
         <% } else { %>
@@ -20,9 +20,12 @@
         <% } %>
     </div>
 
-
-    <!-- MODAL INPUT -->
-    <div id="inputNote" class="modal">
+<%= note._id ? "something" : "nothing" %> 
+    <!-- MODAL INPUT -->      
+    <!-- <div id="inputNote" class="modal"> -->
+    <% if(modal == "textNote") {%>
+    <div id="inputNote" class="modal" style:"display:block;" >
+    
         <!-- Add Note button -->
         <div class="modal-content">
             <header class="modal-header">
@@ -32,9 +35,12 @@
             </header>
             <div class="modal-container">
                 <form id="noteFrm" action="/notes/newNote" method='post'>
-                    <input type="text" name="title"><br>
-                    <textarea name="textNote" id="textNote" cols="30" rows="10"></textarea><br>
+                    <input type="text" name="title" value="<%= note._id ? note.title : ''%>"><br>
+                    <textarea name="textNote" id="textNote" cols="30" rows="10"><%= note._id ? note.textNote : ""%></textarea><br>
                     <button id="saveBtn" type='submit' >Save</button>
+                </form>
+                <form action="/notes/<%=note._id%>?_method=DELETE" method="POST">
+                    <button id="delNote">Delete</button>
                 </form>
             </div>
             <footer class="modal-footer">
@@ -42,6 +48,9 @@
             </footer>
         </div>
     </div>
+    <% } %> 
+
+ 
 
 </body>
             
