@@ -77,6 +77,23 @@ async function addNote(req, res, next) {
     })
 }
 
+// Update record
+async function updateNote(req, res, next) {
+    console.log(req.params.id)
+    await Note.updateOne({_id:req.params.id}, req.body)
+
+    // await note.save()
+    Note.find({owner: req.user.id}).exec(function(err, notes) {
+        res.render('notes/index', {
+            title: "All notes",
+            notes,
+            modal: "none",
+            note:{},
+        }) 
+        
+    })
+}
+
 
 
 
@@ -107,5 +124,6 @@ module.exports = {
     show,
     addNote,
     startNote,
+    updateNote,
     delNote,
   };

@@ -3,6 +3,7 @@
 <body>
     <h1>Notes page</h1>
     <a href="/notes/newNote"><button id="addNote">Add Note</button></a>
+    <!-- <a href="/notes/newNote"><button id="addNote">Add Note</button></a> -->
     <!-- <div>
         <a href="/notes/newList"><button>Add Checklist</button></a>
     </div> -->
@@ -20,7 +21,7 @@
         <% } %>
     </div>
 
-<%= note._id ? "something" : "nothing" %> 
+<%= note._id ? note._id : "no id" %> 
     <!-- MODAL INPUT -->      
     <!-- <div id="inputNote" class="modal"> -->
     <% if(modal == "textNote") {%>
@@ -34,11 +35,17 @@
                 <span class="close">&times;</span>
             </header>
             <div class="modal-container">
-                <form id="noteFrm" action="/notes/newNote" method='post'>
+                <!-- dynamically select path (update / create) -->
+                <% let path = ""; %>
+                <% note._id ? path = '/notes/' + note._id + '?_method=PUT' : path = '/notes/newNote' %>
+                <%= path %>
+                <form id="noteFrm" action="<%= path %>" method='post'>
                     <input type="text" name="title" value="<%= note._id ? note.title : ''%>"><br>
                     <textarea name="textNote" id="textNote" cols="30" rows="10"><%= note._id ? note.textNote : ""%></textarea><br>
+                    <!-- Create record -->
                     <button id="saveBtn" type='submit' >Save</button>
                 </form>
+
                 <form action="/notes/<%=note._id%>?_method=DELETE" method="POST">
                     <button id="delNote">Delete</button>
                 </form>

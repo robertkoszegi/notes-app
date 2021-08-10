@@ -10,12 +10,16 @@ router.get('/', notesCtrl.index );
 // Start empty
 router.get('/newNote', notesCtrl.startNote)
 
+// show
+router.get('/:id', notesCtrl.show);
+
 // // new 
 router.post('/newNote', notesCtrl.addNote);
 // router.post('/newList', notesCtrl.addList);
 
-// show
-router.get('/:id', notesCtrl.show);
+// update
+router.put('/:id', notesCtrl.updateNote);
+
 
 // delete 
 router.delete('/:id', notesCtrl.delNote);
