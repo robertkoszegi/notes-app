@@ -2,12 +2,16 @@
 
 <body>
     <h1>Notes page</h1>
+    <!-- ADD BUTTONS -->
     <a href="/notes/newNote"><button id="addNote">Add Note</button></a>
-    <!-- <a href="/notes/newNote"><button id="addNote">Add Note</button></a> -->
-    <!-- <div>
-        <a href="/notes/newList"><button>Add Checklist</button></a>
-    </div> -->
-    
+    <a href="/notes/newList"><button id="addList">Add List</button></a>
+
+    <!-- <ul>
+        <li><input type="checkbox" class="checkbox" name="isChecked" checked > <span class="itemText" name="item">salami</span> </li>
+        <li><input type="checkbox" class="checkbox" name="isChecked" checked > <span class="itemText" name="item">salami</span> </li>
+    </ul> -->
+
+
     <div>
         <% if(notes.length){ %>
             <ul>
@@ -22,26 +26,28 @@
     </div>
 
 <%= note._id ? note._id : "no id" %> 
-    <!-- MODAL INPUT -->      
-    <!-- <div id="inputNote" class="modal"> -->
-    <% if(modal == "textNote") {%>
+    <!-- --------- MODAL ---------- -->      
+    <% if(modal != "none") {%>
     <div id="inputNote" class="modal" style:"display:block;" >
-    
-        <!-- Add Note button -->
+            
         <div class="modal-content">
+
+            <!-- MODAL HEADER -->
             <header class="modal-header">
                 <p>header</p>
                 <!-- close modal button -->
                 <span class="close">&times;</span>
             </header>
+                
+            <!-- TEXT NOTE -->      
+            <% if(modal == "textNote") {%>
             <div class="modal-container">
                 <!-- dynamically select path (update / create) -->
                 <% let path = ""; %>
                 <% note._id ? path = '/notes/' + note._id + '?_method=PUT' : path = '/notes/newNote' %>
-                <%= path %>
                 <form id="noteFrm" action="<%= path %>" method='post'>
-                    <input type="text" name="title" value="<%= note._id ? note.title : ''%>"><br>
-                    <textarea name="textNote" id="textNote" cols="30" rows="10"><%= note._id ? note.textNote : ""%></textarea><br>
+                    <input class="titleInput" placeholder="Title" type="text" name="title" value="<%= note.title %>"><br>
+                    <textarea placeholder="Enter text..." name="textNote" id="textNote" cols="30" rows="10"><%= note._id%></textarea><br>
                     <!-- Create record -->
                     <button id="saveBtn" type='submit' >Save</button>
                 </form>
@@ -50,13 +56,44 @@
                     <button id="delNote">Delete</button>
                 </form>
             </div>
+            <% } %>
+
+            <!-- CHECKLIST --> 
+            <% if(modal == "checklist") {%>
+            <div class="modal-container">
+                <!-- dynamically select path (update / create) -->
+                <% let path = ""; %>
+                <% note._id ? path = '/notes/' + note._id + '?_method=PUT' : path = '/notes/newNote' %>
+                <form id="noteFrm" action="<%= path %>" method='post'>
+                    <input class="titleInput" placeholder="Title" type="text" name="title" value="<%= note.title %>"><br>
+                    <input id="itemInput" type="text" >
+                    <button id="addItembtn">Add item</button><br>
+                    <ul id="listUl">
+
+                    </ul>
+                    <!-- Create record -->
+                    <button id="saveBtn" type='submit' >Save</button>
+                </form>
+
+                <form action="/notes/<%=note._id%>?_method=DELETE" method="POST">
+                    <button id="delNote">Delete</button>
+                </form>
+            </div>
+            <% } %> 
+            
+            
+            <!-- MODAL FOOTER -->
             <footer class="modal-footer">
                 <p>footer</p>
             </footer>
+ 
         </div>
+
     </div>
     <% } %> 
 
+
+    
  
 
 </body>

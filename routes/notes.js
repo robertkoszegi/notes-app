@@ -9,6 +9,7 @@ router.get('/', notesCtrl.index );
 
 // Start empty
 router.get('/newNote', notesCtrl.startNote)
+router.get('/newList', notesCtrl.startList)
 
 // show
 router.get('/:id', notesCtrl.show);

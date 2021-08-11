@@ -2,7 +2,6 @@
 const User = require('../models/user');
 const Note = require('../models/note');
 
-
 function index(req, res, next) {
     console.log(req.user.id)
     
@@ -41,7 +40,8 @@ function show(req, res) {
 
 }
 
-// Show empty module
+// SHOW EMPTY MODULES
+// Note
 function startNote(req,res, next) {
     Note.find({owner: req.user.id}).exec(function(err, notes ) {
         
@@ -49,6 +49,22 @@ function startNote(req,res, next) {
             title: "All notes",
             notes,
             modal: "textNote",
+            note:{},
+
+            
+        }) 
+        
+    })
+}
+
+// List
+function startList(req,res, next) {
+    Note.find({owner: req.user.id}).exec(function(err, notes ) {
+        
+        res.render('notes/index', {
+            title: "All notes",
+            notes,
+            modal: "checklist",
             note:{},
 
             
@@ -124,6 +140,7 @@ module.exports = {
     show,
     addNote,
     startNote,
+    startList,
     updateNote,
     delNote,
   };
