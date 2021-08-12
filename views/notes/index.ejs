@@ -45,9 +45,9 @@
                 <!-- dynamically select path (update / create) -->
                 <% let path = ""; %>
                 <% note._id ? path = '/notes/' + note._id + '?_method=PUT' : path = '/notes/newNote' %>
-                <form id="noteFrm" action="<%= path %>" method='post'>
+                <form id="noteFrm" action="<%= path %>" method='POST'>
                     <input class="titleInput" placeholder="Title" type="text" name="title" value="<%= note.title %>"><br>
-                    <textarea placeholder="Enter text..." name="textNote" id="textNote" cols="30" rows="10"><%= note._id%></textarea><br>
+                    <textarea placeholder="Enter text..." name="textNote" id="textNote" cols="30" rows="10"><%= note.textNote%></textarea><br>
                     <!-- Create record -->
                     <button id="saveBtn" type='submit' >Save</button>
                 </form>
@@ -63,18 +63,25 @@
             <div class="modal-container">
                 <!-- dynamically select path (update / create) -->
                 <% let path = ""; %>
-                <% note._id ? path = '/notes/' + note._id + '?_method=PUT' : path = '/notes/newNote' %>
-                <form id="noteFrm" action="<%= path %>" method='post'>
+                <% note._id ? path = '/notes/' + note._id + '?_method=PUT' : path = '/notes/newList' %>
+                <form id="listFrm" action="<%= path %>" method='POST'>
                     <input class="titleInput" placeholder="Title" type="text" name="title" value="<%= note.title %>"><br>
                     <input id="itemInput" type="text" >
-                    <button id="addItembtn">Add item</button><br>
-                    <ul id="listUl">
-
+                    <!-- Add Item button -->
+                    <button id="addItemBtn">Add item</button><br>
+                    <ul name="thisList" id="listUl">
+                        <%# if(note._id && note.listItems.length) {%>
+                        <% note.listItems.forEach(function(l) { %>
+                        <li><input type="checkbox" name="isChecked" value="true"<% if(l.isChecked) { %> checked <% }; %>><input type="text" value="<%=l.name%>"></li>
+                        <% }) %>
+                        <%# } %>
                     </ul>
+                    <input id="listInput" type="hidden" name="jsonList">
                     <!-- Create record -->
                     <button id="saveBtn" type='submit' >Save</button>
                 </form>
 
+                <!-- Delete Button -->
                 <form action="/notes/<%=note._id%>?_method=DELETE" method="POST">
                     <button id="delNote">Delete</button>
                 </form>

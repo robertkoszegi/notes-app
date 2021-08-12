@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 
 const listItemSchema = new Schema({
-  text: String,
+  name: String,
   isChecked: Boolean,
 },
 {

@@ -2,6 +2,7 @@
 const User = require('../models/user');
 const Note = require('../models/note');
 
+// Basic View
 function index(req, res, next) {
     console.log(req.user.id)
     
@@ -28,10 +29,13 @@ function show(req, res) {
         Note.findById(req.params.id, function(err, note){
             
             res.render('notes/index', {
+                // for main page
                 notes,
                 title: "All notes",
-                modal: "textNote",
+                // for modal
                 note,
+                listItems: note.listItems,
+                modal: note.isChecklist ? "checklist" : "textNote",
                 
             })
             
@@ -39,6 +43,8 @@ function show(req, res) {
     })
 
 }
+
+
 
 // SHOW EMPTY MODULES
 // Note
@@ -65,16 +71,17 @@ function startList(req,res, next) {
             title: "All notes",
             notes,
             modal: "checklist",
-            note:{},
-
+            note:{listItems:[]},
             
+
         }) 
         
     })
 }
 
 
-// Create new record
+
+// CREATE NEW RECORD
 async function addNote(req, res, next) {
     const note = new Note (req.body);
     note.isChecklist = false;
@@ -93,12 +100,60 @@ async function addNote(req, res, next) {
     })
 }
 
-// Update record
+async function addList(req, res, next) {
+    const note = new Note (req.body);
+    note.isChecklist = true;
+    note.owner = req.user.id;
+    note.guest = [];
+    listItemsArr = JSON.parse(req.body.jsonList)
+    
+    listItemsArr.forEach(listItem => {
+        note.listItems.push(listItem)
+    });
+    await note.save()
+    
+    Note.find({owner: req.user.id}).exec(function(err, notes) {
+        res.render('notes/index', {
+            title: "All notes",
+            notes,
+            modal: "none",
+            note:{},
+        }) 
+        
+    })
+}
+
+
+
+// UPDATE RECORD
 async function updateNote(req, res, next) {
-    console.log(req.params.id)
     await Note.updateOne({_id:req.params.id}, req.body)
 
     // await note.save()
+    Note.find({owner: req.user.id}).exec(function(err, notes) {
+
+        res.render('notes/index', {
+            title: "All notes",
+            notes,
+            modal: "none",
+            note:{},
+        }) 
+        
+    })
+}
+
+async function updateList(req, res, next) {
+    await Note.updateOne({_id:req.params.id}, req.body)
+    console.log("req",req.body.jsonList)
+    listItemsArr = JSON.parse(req.body.jsonList)
+    if(listItemsArr.length) {
+        note.listItems.deleteMany();
+        listItemsArr.forEach(listItem => {
+        note.listItems.push(listItem)
+    });
+    }
+
+    await note.save()
     Note.find({owner: req.user.id}).exec(function(err, notes) {
         res.render('notes/index', {
             title: "All notes",
@@ -120,6 +175,8 @@ async function updateNote(req, res, next) {
 //     // });
 // }
   
+
+// DELETE RECORD
 function delNote(req, res, next) {
     Note.deleteOne({_id:req.params.id}, function(err) {
         if(err) {console.log(err)};
@@ -139,8 +196,10 @@ module.exports = {
     index,
     show,
     addNote,
+    addList,
     startNote,
     startList,
     updateNote,
+    updateList,
     delNote,
   };

@@ -16,10 +16,11 @@ router.get('/:id', notesCtrl.show);
 
 // // new 
 router.post('/newNote', notesCtrl.addNote);
-// router.post('/newList', notesCtrl.addList);
+router.post('/newList', notesCtrl.addList);
 
 // update
 router.put('/:id', notesCtrl.updateNote);
+router.put('/:id', notesCtrl.updateList);
 
 
 // delete 
