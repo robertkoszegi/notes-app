@@ -19,8 +19,8 @@ router.post('/newNote', notesCtrl.addNote);
 router.post('/newList', notesCtrl.addList);
 
 // update
-router.put('/:id', notesCtrl.updateNote);
-router.put('/:id', notesCtrl.updateList);
+router.put('/updateNote/:id', notesCtrl.updateNote);
+router.put('/updateList/:id', notesCtrl.updateList);
 
 
 // delete 

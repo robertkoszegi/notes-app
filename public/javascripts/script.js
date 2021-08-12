@@ -38,6 +38,7 @@ const listInput = document.getElementById('listInput')
 
 const itemTextElArr = document.getElementsByClassName('itemText')
 const itemCheckboxElArr = document.getElementsByClassName('itemCheckbox')
+const itemIdElArr = document.getElementsByClassName('itemId')
 // const itemLiEl = document.getElementsByClassName('itemLi')
 
 
@@ -94,10 +95,16 @@ function addToTempList(event) {
   inputCb.setAttribute("class", "itemCheckbox");
   // inputCb.setAttribute("name", inpText); // keep getting [object Text]
   // create li
+  let inputId = document.createElement('input');
+  inputId.setAttribute("class", "itemId");
+  inputId.setAttribute("name", "id");
+  inputId.setAttribute("type", "hidden");
+
   let li = document.createElement('li')
   li.setAttribute("class", "itemLi")
   li.appendChild(inputCb);
   li.appendChild(inputField);
+  li.appendChild(inputId);
   listUl.appendChild(li);
       
 }
@@ -109,10 +116,11 @@ function submitList(event) {
   for (let i = 0; i < itemTextElArr.length; i++) {
     jsonList.push({
       name: itemTextElArr[i].value,
-      isChecked: itemCheckboxElArr[i].checked
+      isChecked: itemCheckboxElArr[i].checked,
+      id: itemIdElArr[i].value,
     })
   }
   listInput.setAttribute("value", JSON.stringify(jsonList))
-
+  console.log(jsonList)
   listFrm.submit()
 }

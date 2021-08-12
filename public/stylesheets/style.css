@@ -1,13 +1,33 @@
+* {
+  box-sizing: border-box;
+}
+
+
 body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   background-color: rgb(209, 165, 108);
 }
 
+nav {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+ul {
+  list-style-type: none;
+}
+
 a {
   color: #606466;
 }
 
+.login {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
 
 /* The Modal (background) */
 .modal {
