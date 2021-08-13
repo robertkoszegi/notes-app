@@ -11,7 +11,7 @@ function index(req, res, next) {
     
     Note.find({owner: req.user.id}).exec(function(err, notes) {
         res.render('notes/index', {
-            title: "All notes",
+            title: "All Notes",
             notes,
             modal: "none",
             note:{},
@@ -91,15 +91,7 @@ async function addNote(req, res, next) {
     note.guest = [];
 
     await note.save()
-    Note.find({owner: req.user.id}).exec(function(err, notes) {
-        res.render('notes/index', {
-            title: "All notes",
-            notes,
-            modal: "none",
-            note:{},
-        }) 
-        
-    })
+    res.redirect('/notes')
 }
 
 async function addList(req, res, next) {
@@ -113,16 +105,8 @@ async function addList(req, res, next) {
         note.listItems.push(listItem)
     });
     await note.save()
+    res.redirect('/notes')
     
-    Note.find({owner: req.user.id}).exec(function(err, notes) {
-        res.render('notes/index', {
-            title: "All notes",
-            notes,
-            modal: "none",
-            note:{},
-        }) 
-        
-    })
 }
 
 
@@ -133,38 +117,38 @@ async function updateNote(req, res, next) {
     await Note.updateOne({_id:req.params.id}, req.body)
 
     // await note.save()
-    Note.find({owner: req.user.id}).exec(function(err, notes) {
+    res.redirect('/notes')
+    // Note.find({owner: req.user.id}).exec(function(err, notes) {
 
-        res.render('notes/index', {
-            title: "All notes",
-            notes,
-            modal: "none",
-            note:{},
-        }) 
+    //     res.render('notes/index', {
+    //         title: "All notes",
+    //         notes,
+    //         modal: "none",
+    //         note:{},
+    //     }) 
         
-    })
+    // })
 }
 
 async function updateList(req, res, next) {
     const note = await Note.findOneAndUpdate({_id:req.params.id}, req.body,{useFindAndModify:false, new: true})
-    console.log(note)
-    // await note.updateOne({_id: req.params.id}, req.body)
+    console.log("note",note)
+
     let listItemsArr = JSON.parse(req.body.jsonList)
-    console.log(listItemsArr)
-    // console.log(listItemsArr)
+    console.log('listItemsArr:',listItemsArr)
+
     if(listItemsArr.length) {
         listItemsArr.forEach(oneItem => {
             if(oneItem.id) { 
-                let thisItem = note.listItems.find((li) => {
-                    console.log("li",li)
-                    return li._id = oneItem.id;
-                })
-                console.log("thisItem:",thisItem)
-                console.log("note.listItem before change",note.listItems)
-                thisItem.name = oneItem.name;
-                thisItem.isChecked = oneItem.isChecked;
-                console.log("note.listItem after change",note.listItems)
-            //else
+
+                let foundItem = note.listItems.id(oneItem.id,function(err) {
+                    if (err) {
+                      console.log(err);
+                    } 
+                });
+                foundItem.name = oneItem.name;
+                foundItem.isChecked = oneItem.isChecked
+
             } else {
                 note.listItems.push(oneItem)
             }
@@ -172,15 +156,7 @@ async function updateList(req, res, next) {
     }
 
     await note.save()
-    Note.find({owner: req.user.id}).exec(function(err, notes) {
-        res.render('notes/index', {
-            title: "All notes",
-            notes,
-            modal: "none",
-            note:{},
-        }) 
-        
-    })
+    res.redirect('/notes')
 }
 
 

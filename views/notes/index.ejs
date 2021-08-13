@@ -1,17 +1,15 @@
 <%- include('../partials/header') %>
 
-<body>
-    <h1>Notes page</h1>
-    <!-- ADD BUTTONS -->
-    <div class="login">
-        <a href="/notes/newNote"><button id="addNote">Add Note</button></a>
-        <a href="/notes/newList"><button id="addList">Add List</button></a>
-    </div>
+<div id="back">
 
-    <!-- <ul>
-        <li><input type="checkbox" class="checkbox" name="isChecked" checked > <span class="itemText" name="item">salami</span> </li>
-        <li><input type="checkbox" class="checkbox" name="isChecked" checked > <span class="itemText" name="item">salami</span> </li>
-    </ul> -->
+    <div id="contentTop">
+        <h1>Your Notes</h1>
+        <!-- ADD BUTTONS -->
+        <div class="contenBtns">
+            <a href="/notes/newNote"><button id="addNote">Add Note</button></a>
+            <a href="/notes/newList"><button id="addList">Add List</button></a>
+        </div>
+    </div>
 
     <!-- NOTE LIST -->
     <div>
@@ -19,7 +17,7 @@
             <ul>
                 <% notes.forEach(n =>  {%>
                     <!-- this will be a button call modal with the content -->
-                    <a href="/notes/<%=n._id%>"><li><%=n.title%></li></a>
+                    <a href="/notes/<%=n._id%>"><div class="noteTitleDisp"><%=n.title%></div></a>
                 <% })  %>       
             </ul>
         <% } else { %>
@@ -27,17 +25,15 @@
         <% } %>
     </div>
 
-    <!-- TEST -->
-    <%= note._id ? note._id : "no id" %> 
     <!-- --------- MODAL ---------- -->      
     <% if(modal != "none") {%>
-    <div id="inputNote" class="modal" style:"display:block;" >
+    <div id="inputNote" class="modal"  >
             
         <div class="modal-content">
 
             <!-- MODAL HEADER -->
             <header class="modal-header">
-                <p>header</p>
+                
                 <!-- close modal button -->
                 <span class="close">&times;</span>
             </header>
@@ -47,45 +43,54 @@
             <div class="modal-container">
                 <!-- dynamically select path (update / create) -->
                 <% let path = ""; %>
-                <% note._id ? path = '/notes/updateNote' + note._id + '?_method=PUT' : path = '/notes/newNote' %>
+                <% note._id ? path = '/notes/updateNote/' + note._id + '?_method=PUT' : path = '/notes/newNote' %>
                 <form id="noteFrm" action="<%= path %>" method='POST'>
-                    <input class="titleInput" placeholder="Title" type="text" name="title" value="<%= note.title %>"><br>
+                    <input class="titleInput" placeholder="Title" type="text" name="title" value="<%= note.title %>"><br><br>
                     <textarea placeholder="Enter text..." name="textNote" id="textNote" cols="30" rows="10"><%= note.textNote%></textarea><br>
+                    <br>
                     <!-- Create record -->
                     <button id="saveBtn" type='submit' >Save</button>
                 </form>
-
+                <br>
                 <form action="/notes/<%=note._id%>?_method=DELETE" method="POST">
                     <button id="delNote">Delete</button>
                 </form>
             </div>
             <% } %>
-
+            
             <!-- CHECKLIST --> 
             <% if(modal == "checklist") {%>
-            <div class="modal-container">
-                <!-- dynamically select path (update / create) -->
-                <% let path = ""; %>
-                <% note._id ? path = '/notes/updateList/' + note._id + '?_method=PUT' : path = '/notes/newList' %>
-                <form id="listFrm" action="<%= path %>" method='POST'>
-                    <input class="titleInput" placeholder="Title" type="text" name="title" value="<%= note.title %>"><br>
-                    <input id="itemInput" type="text" >
-                    <!-- Add Item button -->
-                    <button id="addItemBtn">Add item</button><br>
-                    <ul name="thisList" id="listUl">
+                <div class="modal-container">
+                    <!-- dynamically select path (update / create) -->
+                    <% let path = ""; %>
+                    <% note._id ? path = '/notes/updateList/' + note._id + '?_method=PUT' : path = '/notes/newList' %>
+                    <form id="listFrm" action="<%= path %>" method='POST'>
+                        <input class="titleInput" placeholder="Title" type="text" name="title" value="<%= note.title %>"><br><br>
+                        <!-- Add Item button -->
+                        <button id="addItemBtn">Add item</button><br><br>
+                        <!-- List -->
+                        <ul name="thisList" id="listUl">
                         <%# if(note._id && note.listItems.length) {%>
                         <% note.listItems.forEach(function(l) { %>
-                        <li>
-                            <input type="checkbox" class="itemCheckbox" name="isChecked" value="true"<% if(l.isChecked) { %> checked <% }; %>>
-                            <input type="text" class="itemText" value="<%=l.name%>">
-                            <input type="hidden" class="itemId" value="<%=l._id%>">
-                        </li>
+                            <li class="itemLi">
+                                <!-- checkbox -->
+                                <input type="checkbox" class="itemCheckbox" name="isChecked" value="true"<% if(l.isChecked) { %> checked <% }; %>>
+                                <!-- text input -->
+                                <input type="text" class="itemText" value="<%=l.name%>">
+                                <!-- delete item button - NOT WORKING -->
+                                <!-- <button class="removeItem" onclick="removeItem()">&times;</button> -->
+                                <!-- hidden id field -->
+                                <input type="hidden" class="itemId" value="<%=l._id%>">
+                            </li>
                         <% }) %>
                         <%# } %>
                     </ul>
-                    <input id="listInput" type="text" name="jsonList">
+                    <br>
+                    <br>
+                    <input id="listInput" type="hidden" name="jsonList">
                     <!-- Create record -->
                     <button id="saveBtn" type='submit' >Save</button>
+                    <br><br>
                 </form>
 
                 <!-- Delete Button -->
@@ -98,18 +103,19 @@
             
             <!-- MODAL FOOTER -->
             <footer class="modal-footer">
-                <p>footer</p>
+            
             </footer>
  
         </div>
 
     </div>
     <% } %> 
+</div>
 
 
     
  
 
-</body>
+
             
 <%- include('../partials/footer') %>

@@ -5,8 +5,6 @@
 // Get the modal
 const modal = document.getElementById("inputNote");
 
-// const noteFrm = document.getElementById("noteFrm");
-
 // Get the button that opens the modal
 const btn = document.getElementById("addNote");
 
@@ -29,17 +27,18 @@ const listFrm = document.getElementById('listFrm')
 
 // -- this mign not be relavant any more
 // When the user clicks on the button, open the modal
-document.getElementById("addNote").onclick = function() {
-    modal.style.display = "block";
-}
+// document.getElementById("addNote").onclick = function() {
+//     modal.style.display = "block";
+// }
 
 const listInput = document.getElementById('listInput')
 
 
+// <LI> elements
 const itemTextElArr = document.getElementsByClassName('itemText')
 const itemCheckboxElArr = document.getElementsByClassName('itemCheckbox')
 const itemIdElArr = document.getElementsByClassName('itemId')
-// const itemLiEl = document.getElementsByClassName('itemLi')
+
 
 
 
@@ -51,9 +50,7 @@ span.onclick = function() {
   modal.style.display = "none";
 }
 
-// addItemBtnEl.onclick = function(event) {
-//   addToTempList()
-// }
+
 addItemBtnEl.addEventListener("click", addToTempList);
 
 
@@ -64,14 +61,11 @@ saveBtn.addEventListener("click", submitList);
 window.onclick = function(event) {
   if (event.target == modal) {
     modal.style.display = "none";
+    console.log("modal")
   }
 }
 
-// // Close modal and enter note to DB
-// saveBtn.onclick = function() {
-//     noteFrm.submit()
-//     modal.style.display = "none"
-// }
+
 
 // ------------------
 // --  FUNCTIONS  --
@@ -85,16 +79,11 @@ function addToTempList(event) {
   inputField.setAttribute("class", "itemText");
   inputField.setAttribute("name", "item");
   inputField.setAttribute("type", "text");
-  // inputField.setAttribute("value", itemInputEl.value);
-  // create item text
-  // let inpText = document.createTextNode(itemInputEl.value);
-  // inputField.appendChild(inpText);
-  // create checkbox
+
   let inputCb = document.createElement('input');
   inputCb.setAttribute("type", "checkbox");
   inputCb.setAttribute("class", "itemCheckbox");
-  // inputCb.setAttribute("name", inpText); // keep getting [object Text]
-  // create li
+ 
   let inputId = document.createElement('input');
   inputId.setAttribute("class", "itemId");
   inputId.setAttribute("name", "id");
@@ -124,3 +113,9 @@ function submitList(event) {
   console.log(jsonList)
   listFrm.submit()
 }
+
+
+// Still testing
+// function removeItem() {
+//   document.getElementsByClassName('itemLi')[0].parentNode.removeChild(document.getElementsByClassName('itemLi')[0])
+// }
